@@ -14,34 +14,34 @@
 </head>
 <body>
 
-<div class="container mt-3">
-    <h2>Show the students</h2>
-    <p>Type something in the input field to search the table for studentid, first names, last names or Department:</p>
-    <input class="form-control" id="myInput" type="text" placeholder="Search..">
-    <br>
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>StudentID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Department</th>
-        </tr>
-        </thead>
-        <tbody id="myTable">
-        <?php while ($row = $stmt->fetch()) { ?>
+    <div class="container mt-3">
+        <h2>Show the students</h2>
+        <p>Type something in the input field to search the table for studentid, first names, last names or Department:</p>
+        <input class="form-control" id="myInput" type="text" placeholder="Search..">
+        <br>
+        <table class="table table-bordered">
+            <thead>
             <tr>
-                <td><?php echo $row['stdID']; ?> </td>
-                <td><?php echo $row['fname']; ?> </td>
-                <td><?php echo $row['lname']; ?> </td>
-                <td><?php echo $row['deptName']; ?> </td>
+                <th>StudentID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Department</th>
             </tr>
-        <?php } ;?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody id="myTable">
+            <?php while ($row = $stmt->fetch()) { ?>
+                <tr>
+                    <td><?php echo $row['stdID']; ?> </td>
+                    <td><?php echo $row['fname']; ?> </td>
+                    <td><?php echo $row['lname']; ?> </td>
+                    <td><?php echo $row['deptName']; ?> </td>
+                </tr>
+            <?php } ;?>
+            </tbody>
+        </table>
 
-    <a href="index.php">Back to HOME</a>
-</div>
+        <a href="index.php">Back to HOME</a>
+    </div>
 <?php require "templates/footer.php"; ?>
 </div>
 

@@ -15,7 +15,7 @@
 <body>
 <h2>Add a student</h2>
     <div class="container-sm">
-        <form action="function/addstd.php" method="post">
+        <form action="function/add.php" method="post">
             <div class="form-group">
                 <label for="firstname">First Name</label>
                 <input type="text" class="form-control" id="firstname" name="firstname" placeholder="First Name" required>
