@@ -10,15 +10,11 @@
         include "templates/header.php";
         include "templates/footer.php";
         include "config/connection.php";
-    $stmt = $pdo->prepare('SELECT stdID, fname, lname, deptName FROM students, department WHERE students.deptID = department.deptID AND stdID LIKE ?');
-    if (!empty($_POST))
-        $value = '%' . $_POST["keyword"] . '%';
-        $stmt->bindParam(1, $value);
+        $stmt = $pdo->prepare( 'SELECT * FROM students, department WHERE students.deptID = department.deptID');
         $stmt->execute();
-
-        $stm = $pdo->prepare( 'SELECT deptID,deptName FROM department');
-        $stm->execute();
+        $row = $stmt->fetch();
     ?>
+
     <script>
         $('#exampleModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
@@ -27,20 +23,19 @@
             modal.find('.modal-title').text('New message to ' + recipient)
             modal.find('.modal-body input').val(recipient)
         })
-
-        function confirmDelete() {
-            if (confirm("Press a button!")) {
-
-            }
+    </script>
+    <script>
+        function confirmDelete(stdID) {
+            var ans = confirm("ต้องการลบ  " + stdID);
+            if (ans==true)
+                document.location = "function/delete.php?stdID=" + stdID;
         }
     </script>
 </head>
-<body>
+<body class="container mt-3">
     <div class="col-12">
-        <form method="post">
-            <input type="text" name="keyword">
-            <input type="submit" value="ค้นหา">
-        </form>
+        <p>Type something in the input field to search the table for studentid, first names, last names or Department:</p>
+        <input class="form-control" id="myInput" type="text" placeholder="Search..">
         <br>
         <table class="table table-bordered">
             <thead>
@@ -54,8 +49,6 @@
             </tr>
             </thead>
             <tbody id="myTable" >
-
-            <?php while ($row = $stmt->fetch()) {?>
                 <tr>
                     <td>
                         <?php echo $row['stdID']; ?>
@@ -67,10 +60,10 @@
                         <?php echo $row['lname']; ?>
                     </td>
                     <td>
-                        <?php echo $row['deptName']; ?>
+                        <?php echo $row['deptName'];?>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat">Update</button>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat">Update</button>
 
                         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -85,7 +78,8 @@
                                         <form method="post" action="function/update.php">
                                             <div class="form-group">
                                                 <label for="recipient-name" class="col-form-label">StudentID  :</label>
-                                                <h1 class="form-control" id="studentID" name="studentID" ><?= $row['stdID'] ?></h1>
+                                                <h1 class="form-control"><?php echo $row['stdID'] ?>  </h1>
+                                                <input  type="hidden" class="form-control" id="studentID" name="studentID" value="<?= $row['stdID'] ?>">
                                             </div>
                                             <div class="form-group">
                                                 <label for="recipient-name" class="col-form-label">First Name  :</label>
@@ -98,12 +92,19 @@
                                             <div class="form-group">
                                                 <label for="lastname">Department</label>
                                                 <select class="form-control" name="deptID" id="deptID" required>
-                                                        <option><?php echo $row['deptName']; ?> </option>
+                                                    <option><?php echo $row['deptID']  . $row['deptName']; ?></option>
+                                                    <?php
+                                                    $stm = $pdo->prepare( 'SELECT deptID,deptName FROM department');
+                                                    $stm->execute();
+                                                    while ($rows = $stm->fetch()) {
+                                                        ?>
+                                                        <option> <?php echo $rows['deptID'] .' : '. $rows['deptName']; ?> </option>
+                                                    <?php } ?>
                                                 </select>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Send message</button>
+                                                <button type="submit" class="btn btn-primary">Send</button>
                                             </div>
                                         </form>
                                     </div>
@@ -114,10 +115,9 @@
 
                     </td>
                     <td>
-                        <button type="button" class="btn btn-danger" onclick="confirmDelete()" name="studentID" value="<?php $row['stdID'] ?>" >Delete</button>
+                        <a href="#" class="btn btn-danger" onclick='confirmDelete("<?php echo $row['stdID']; ?>")')">Delete</a>
                     </td>
                 </tr>
-            <?php } ?>
             </tbody>
         </table>
     </div>

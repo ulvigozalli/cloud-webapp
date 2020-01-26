@@ -4,7 +4,7 @@
     <?php
     require "config/connection.php";
     $stmt = $pdo->prepare( 'SELECT stdID, fname, lname, deptName FROM students, department WHERE students.deptID = department.deptID');
-    $stmt->execute()
+    $stmt->execute();
     ?>
 
     <?php require "templates/header.php"; ?>
